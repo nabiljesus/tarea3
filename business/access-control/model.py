@@ -14,6 +14,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import sessionmaker
 
+
 DB = declarative_base()
 
 class dbuser(DB):
@@ -21,7 +22,7 @@ class dbuser(DB):
     __tablename__ = 'dbuser'
     fullname = Column(String(50))
     username = Column(String(16), primary_key = True)
-    password = Column(String(16))
+    password = Column(String(100)) #para que pueda aceptar hash
     email = Column(String(30))
     iddpt = Column(Integer, ForeignKey('dpt.iddpt'))
     idrole = Column(Integer, ForeignKey('role.idrole'))
@@ -63,16 +64,20 @@ class role(DB):
     users = relationship('dbuser', backref='role')
     
     ''' Metodo init
-        Constructor del rol
+        Constructor del rolnamerole
     ''' 
     
-    def __init__(self, idrole, namerole = None):
+    def __init__(self, idrole, namerole):
         
         self.idrole = idrole 
         self.namerole = namerole
-     
 
+# stuff to run always here such as class/def
 engine = create_engine(URL(**settings.DATABASE))
+def main():
+    DB.metadata.drop_all(engine)
+    DB.metadata.create_all(engine)
 
-DB.metadata.drop_all(engine)
-DB.metadata.create_all(engine)
+if __name__ == "__main__":
+   # stuff only to run when not called via 'import' here
+   main()

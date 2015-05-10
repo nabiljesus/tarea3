@@ -4,14 +4,13 @@ Created on May 6, 2015
 @author: Meggie y Cristina
 '''
 
-import model
+from model import *
 
-from sqlalchemy.orm import sessionmaker
-
-DBSession = sessionmaker(bind = model.engine)
+DBSession = sessionmaker(bind = engine)
 
 session = DBSession()
 
+engine = create_engine(URL(**settings.DATABASE))
 
 class clsDpt():
         
@@ -21,29 +20,41 @@ class clsDpt():
           
     def insertar(self, iddpt, namedpt):
         
-        dpt = model.dpt(iddpt, namedpt) 
-        session.add(dpt)
+        newdpt = dpt(iddpt, namedpt) 
+        session.add(newdpt)
         session.commit()
         
     ''' Metodo buscar
         Busca a traves del nombre un departamento dentro de la base de datos
     '''    
         
-    def buscar(self, dpt):
-        
-        busq = session.query(model.dpt).filter(model.dpt.iddpt == dpt).all()
-        return busq
+    def buscar(self, iiddpt):
+        out=""
+        result = engine.execute("select * from dpt where iddpt="+str(iiddpt)+";")
+        for u in session.query(dpt).instances(result):
+            out+='\n'+str(u.iddpt)+" "+u.namedpt
+        return out
+
         
     ''' Metodo eliminar
         Elimina dentro de la base de datos a un departamento
     '''   
      
-    def eliminar(self, dpt):
+    def eliminar(self, idpt):
         
-        query = self.buscar(dpt)
-        
-        session.query(model.dpt).filter(model.dpt.iddpt == dpt).delete()
+        query = self.buscar(idpt)
+        session.query(dpt).filter(dpt.iddpt == idpt).delete(synchronize_session=False)
         session.commit()
+    
+    ''' Metodo listar
+        Lista todas las columnas en departamento.
+    '''   
+     
+    def listar(self):
+        
+        result = engine.execute("select * from dpt")
+        for u in session.query(dpt).instances(result):
+            print(u.iddpt,u.namedpt)
         
     ''' Metodo modificar
         Modifica algun atributo de un departamento dentro de la base de datos
@@ -53,17 +64,28 @@ class clsDpt():
         
         query = self.buscar(iidpt)
                 
-        session.query(model.dpt).filter(model.dpt.iddpt == iidpt).\
+        session.query(dpt).filter(dpt.iddpt == iidpt).\
              update({'namedpt' : (inamedpt) })
         session.commit()
-        
-dpts = clsDpt()
-dpts.insertar(1, 'dpt1') 
-dpts.insertar(2, 'dpt2')
-dpts.insertar(3, 'dpt3') 
 
-dpts.eliminar(1)
 
-dpts.modificar(2, 'dpt222')
+def main():
+    dpts = clsDpt()
+    dpts.insertar(1, 'dpt1') 
+    dpts.insertar(2, 'dpt2')
+    dpts.insertar(3, 'dpt3') 
+    
+    dpts.eliminar(1)
+    
+    dpts.modificar(2, 'dpt222')
+    #print()
+    print(dpts.buscar(2))
+    #print()
+    #dpts.listar()
+
+if __name__ == "__main__":
+   # stuff only to run when not called via 'import' here
+   main()      
+
         
        
