@@ -8,7 +8,13 @@ import model
 import role
 import dpt
 
-class clsUser():
+from sqlalchemy.orm import sessionmaker
+
+DBSession = sessionmaker(bind = model.engine)
+
+session = DBSession()
+
+class clsDBUser():
        
     ''' Metodo insertar
         Inserta un nuevo usuario a la base de datos
@@ -16,7 +22,7 @@ class clsUser():
         
     def insertar(self, fullname, username, password, email, iddpt, idrole):
         
-       user = model.User(fullname, username, password, email, iddpt, idrole) 
+       user = model.dbuser(fullname, username, password, email, iddpt, idrole) 
        session.add(user)
        session.commit()
        
@@ -26,7 +32,7 @@ class clsUser():
         
     def buscar(self, iusername):
         
-        busq = session.query(model.User).filter(model.User.username == iusername).all()
+        busq = session.query(model.dbuser).filter(model.dbuser.username == iusername).all()
         return busq
         
     ''' Metodo eliminar
@@ -34,9 +40,9 @@ class clsUser():
     ''' 
     
     def eliminar(self, iusername):
+        query = self.buscar(iusername)
         
-        username = model.User(username = iusername)
-        session.delete(username)
+        session.query(model.dbuser).filter(model.dbuser.username == iusername).delete()
         session.commit()
         
     ''' Metodo modificar
@@ -45,19 +51,35 @@ class clsUser():
         
     def modificar(self, iusername, ifullname = None, ipassword = None, iemail = None, iidpt = None, iidrole = None):
         
-        user = model.Role.buscar(iusername)
-        
+        user = self.buscar(iusername)
+
+
         if ifullname != None:
-            user.fullname = ifullname
+            session.query(model.dbuser).filter(model.dbuser.username == iusername).\
+                update({'fullname' : (ifullname) })
+            session.commit()
         if ipassword != None:
-            user.password = ipassword
+            session.query(model.dbuser).filter(model.dbuser.username == iusername).\
+                update({'password' : (ipassword) })
+            session.commit()
         if iemail != None:
-            user.email = iemail
+            session.query(model.dbuser).filter(model.dbuser.username == iusername).\
+                update({'email' : (iemail) })
+            session.commit()
         if iidpt != None:
-            user.idpt = iidpt
+            session.query(model.dbuser).filter(model.dbuser.username == iusername).\
+                update({'idpt' : (iidpt) })
+            session.commit()
         if iidrole != None:
-            user.idrole = iidrole 
-        
-        session.add(user)
-        session.commit()
-        
+            session.query(model.dbuser).filter(model.dbuser.username == iusername).\
+                update({'idrole' : (iidrole) }) 
+            session.commit()
+
+usr = clsDBUser()
+usr.insertar("juanjito", "juanjuan", "juan123", "juan@juan.com", 2, 3) 
+usr.insertar("juanjito2", "juanjuan2", "juan123", "juan2@juan.com", 3, 3) 
+usr.insertar("juanjito3", "juanjuan3", "juan123", "juan2@juan.com", 3, 3) 
+
+usr.eliminar("juanjuan")
+
+usr.modificar("juanjuan2","erjuan")

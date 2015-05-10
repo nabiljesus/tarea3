@@ -23,7 +23,7 @@ class clsRole():
         
     def insertar(self, idrole, namerole):
         
-        role = model.Role(idrole, namerole) 
+        role = model.role(idrole, namerole) 
         session.add(role)
         session.commit()
         
@@ -33,7 +33,7 @@ class clsRole():
         
     def buscar(self, role):
         
-        busq = session.query(model.Role).filter(model.Role.idrole == role).all()
+        busq = session.query(model.role).filter(model.role.idrole == role).all()
         return busq
         
     ''' Metodo eliminar
@@ -44,7 +44,7 @@ class clsRole():
         
         query = self.buscar(role)
         
-        session.query(model.Role).filter(model.Role.idrole == role).delete()
+        session.query(model.role).filter(model.role.idrole == role).delete()
         session.commit()
         
     ''' Metodo modificar
@@ -55,7 +55,7 @@ class clsRole():
         
         query = self.buscar(role)
                 
-        session.query(model.Role).filter(model.Role.idrole == role).\
+        session.query(model.role).filter(model.role.idrole == role).\
              update({'namerole' : (iname) })
         session.commit()
     

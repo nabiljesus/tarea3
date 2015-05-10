@@ -5,36 +5,26 @@ Created on May 6, 2015
 '''
 
 import os
-
 import settings
-
 from flask import Flask
-
 from flask.ext.sqlalchemy import SQLAlchemy
-
 from sqlalchemy.engine.url import URL
-
 from sqlalchemy.orm import relationship, backref
-
 from sqlalchemy.ext.declarative import declarative_base
-
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
-
 from sqlalchemy.orm import sessionmaker
 
-db = declarative_base()
+DB = declarative_base()
 
-# Clase Usuario
-
-class User(db):
+class dbuser(DB):
     
-    __tablename__ = 'Users'
-    fullname = Column(String(50), unique = True)
+    __tablename__ = 'dbuser'
+    fullname = Column(String(50))
     username = Column(String(16), primary_key = True)
-    password = Column(String(16), unique = True)
-    email = Column(String(30), unique = True)
-    iddpt = Column(Integer, ForeignKey('Departaments.iddpt'))
-    idrole = Column(Integer, ForeignKey('Roles.idrole'))
+    password = Column(String(16))
+    email = Column(String(30))
+    iddpt = Column(Integer, ForeignKey('dpt.iddpt'))
+    idrole = Column(Integer, ForeignKey('role.idrole'))
     
     ''' Metodo init
         Constructor del usuario
@@ -49,14 +39,12 @@ class User(db):
         self.iddpt = iddpt 
         self.idrole = idrole
 
-# Clase Departamento
-
-class Dpt(db):
+class dpt(DB):
     
-    __tablename__ = 'Departaments'
+    __tablename__ = 'dpt'
     iddpt = Column(Integer, primary_key = True)
     namedpt = Column(String(50), unique = True)
-    users = relationship('User', backref='Departaments')
+    users = relationship('dbuser', backref='dpt')
     
     ''' Metodo init
         Constructor del departamento
@@ -67,14 +55,12 @@ class Dpt(db):
         self.iddpt = iddpt
         self.namedpt = namedpt
 
-# Clase Role
-
-class Role(db):
+class role(DB):
     
-    __tablename__ = 'Roles'
+    __tablename__ = 'role'
     idrole = Column(Integer, primary_key = True)
     namerole = Column(String(50), unique = True)
-    users = relationship('User', backref='Roles')
+    users = relationship('dbuser', backref='role')
     
     ''' Metodo init
         Constructor del rol
@@ -88,5 +74,5 @@ class Role(db):
 
 engine = create_engine(URL(**settings.DATABASE))
 
-db.metadata.drop_all(engine)
-db.metadata.create_all(engine)
+DB.metadata.drop_all(engine)
+DB.metadata.create_all(engine)

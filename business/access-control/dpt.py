@@ -6,6 +6,13 @@ Created on May 6, 2015
 
 import model
 
+from sqlalchemy.orm import sessionmaker
+
+DBSession = sessionmaker(bind = model.engine)
+
+session = DBSession()
+
+
 class clsDpt():
         
     ''' Metodo insertar
@@ -14,7 +21,7 @@ class clsDpt():
           
     def insertar(self, iddpt, namedpt):
         
-        dpt = model.Dpt(iddpt, namedpt) 
+        dpt = model.dpt(iddpt, namedpt) 
         session.add(dpt)
         session.commit()
         
@@ -24,7 +31,7 @@ class clsDpt():
         
     def buscar(self, dpt):
         
-        busq = session.query(model.Dpt).filter(model.Dpt.iddpt == dpt).all()
+        busq = session.query(model.dpt).filter(model.dpt.iddpt == dpt).all()
         return busq
         
     ''' Metodo eliminar
@@ -35,7 +42,7 @@ class clsDpt():
         
         query = self.buscar(dpt)
         
-        session.query(model.Dpt).filter(model.Role.iddpt == dpt).delete()
+        session.query(model.dpt).filter(model.dpt.iddpt == dpt).delete()
         session.commit()
         
     ''' Metodo modificar
@@ -46,7 +53,7 @@ class clsDpt():
         
         query = self.buscar(iidpt)
                 
-        session.query(model.Role).filter(model.Role.iddpt == iidpt).\
+        session.query(model.dpt).filter(model.dpt.iddpt == iidpt).\
              update({'namedpt' : (inamedpt) })
         session.commit()
         
