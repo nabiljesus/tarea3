@@ -7,28 +7,25 @@ import unittest
 from business.access_control.dpt import *
  
 class dptTester(unittest.TestCase):
-     
+    
+
     def setUp(self):
         self.d = clsDpt()
-    
+    # caso valido 
     def testdpt(self):  
         self.d.insertar(10,'nombre')
         st=self.d.buscar(10)
         st=st.split()
         print(st)
         self.assertEqual(st[0],'10')
-    
+    #casos frontera
     def testdpt2(self):  
         self.d.insertar(0,'nombre1')
         st=self.d.buscar(0)
         st=st.split()
         self.assertEqual(st[0],'0')
         
-    def testdptvacio(self):  
-        self.d.insertar(11,'')
-        st=self.d.buscar(11)
-        self.assertEqual(st,'')
-   
+    
     def testdpt3(self):  
         self.d.insertar(13,'n')
         st=self.d.buscar(13)
@@ -81,14 +78,24 @@ class dptTester(unittest.TestCase):
         st=self.d.buscar(21)
         st=st.split()
         self.assertEqual(st[0],'21')
+
+    
+
+    # esquina malicia
+
+    def testdptvacio(self):  
+        self.d.insertar(11,'')
+        st=self.d.buscar(11)
+        self.assertEqual(st,'')
         
-        
+
+    # caso eliminar
     def testdpt9(self):  
         self.d.eliminar(10)
         st=self.d.buscar(10)
         self.assertEqual(True,st,'')
         
-        
+    # caso modificar
     def testdpt9(self):  
         self.d.modificar(13,'nuevonombre')
         st=self.d.buscar(13)
