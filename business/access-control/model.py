@@ -1,14 +1,4 @@
 '''
-<<<<<<< HEAD
-Created on May 8, 2015
-
-@author: Nabil J. Marquez
-@author: Roberto Rinaldi
-'''
-
-import os
-import data.settings
-=======
 Created on May 6, 2015
 
 @author: Meggie y Cristina
@@ -16,8 +6,8 @@ Created on May 6, 2015
 
 import os
 import settings
->>>>>>> 7baec86b196a2509652b01e5017393b4a8f46c1b
 from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
@@ -83,11 +73,7 @@ class role(DB):
         self.namerole = namerole
 
 # stuff to run always here such as class/def
-<<<<<<< HEAD
-engine = create_engine(URL(**data.settings.DATABASE))
-=======
 engine = create_engine(URL(**settings.DATABASE))
->>>>>>> 7baec86b196a2509652b01e5017393b4a8f46c1b
 def main():
     DB.metadata.drop_all(engine)
     DB.metadata.create_all(engine)
