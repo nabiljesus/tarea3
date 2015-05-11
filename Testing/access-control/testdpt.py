@@ -13,7 +13,7 @@ class dptTester(unittest.TestCase):
     
     
     def testdpt(self):  
-        self.d.insertar(10,'nombre')
+        self.d.insertar(10,'nombrenom')
         st=self.d.buscar(10)
         st.split()
         self.assertEqual(True,st[0],10)
