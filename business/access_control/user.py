@@ -26,11 +26,11 @@ class clsDBUser():
        cript=clsAccessControl()
        dp=clsDpt()
        rl=clsRole()
+       passToUse=cript.encript(password)
        verif=self.buscar(username)=="" and rl.buscar(idrole)!="" and dp.buscar(iddpt)!=""
        verif=verif and 0<len(fullname)<=50 and 0<len(username)<=16 and 0<len(password)<=16
-       verif=verif and 0<len(email)<=16 and iddpt>=0 and idrole >=0
+       verif=verif and 0<len(email)<=30 and iddpt>=0 and idrole >=0 and passToUse!=""
        if verif:
-           passToUse=cript.encript(password)
            if passToUse!="":
                newuser = dbuser(fullname, username, passToUse, email, iddpt, idrole) 
                session.add(newuser)
