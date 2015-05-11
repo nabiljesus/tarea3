@@ -1,3 +1,6 @@
+# TAREA 3 - Ing. Software I
+- Nabil J. Márquez
+- Roberto Rinaldi
 
 #Crear el ambiente virtual
 
