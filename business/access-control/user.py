@@ -4,9 +4,12 @@ Created on May 6, 2015
 @author: Meggie y Cristina
 '''
 
-
+import os, sys
+sys.path.append('../../data')
 from model import *
 from encrypt import *
+from dpt import *
+from role import *
 
 DBSession = sessionmaker(bind = engine)
 
@@ -21,10 +24,21 @@ class clsDBUser():
     ''' 
         
     def insertar(self, fullname, username, password, email, iddpt, idrole):
-       crip=clsAccessControl        
-       newuser = dbuser(fullname, username, password, email, iddpt, idrole) 
-       session.add(newuser)
-       session.commit()
+       cript=clsAccessControl()
+       dp=clsDpt()
+       rl=clsRole()
+       if self.buscar(username)=="" and rl.buscar(idrole)!="" and dp.buscar(iddpt)!="":
+           passToUse=cript.encript(password)
+           if passToUse!="":
+               newuser = dbuser(fullname, username, passToUse, email, iddpt, idrole) 
+               session.add(newuser)
+               session.commit()
+               return True
+           else:
+               return False
+           return True
+       else:
+           return False
        
     ''' Metodo buscar
         Busca a traves del nombre un usuario dentro de la base de datos
@@ -63,33 +77,33 @@ class clsDBUser():
     ''' 
         
     def modificar(self, iusername, ifullname = None, ipassword = None, iemail = None, iidpt = None, iidrole = None):
-
-        if ifullname != None:
-            session.query(dbuser).filter(dbuser.username == iusername).\
-                update({'fullname' : (ifullname) })
-            session.commit()
-        if ipassword != None:
-            session.query(dbuser).filter(dbuser.username == iusername).\
-                update({'password' : (ipassword) })
-            session.commit()
-        if iemail != None:
-            session.query(dbuser).filter(dbuser.username == iusername).\
-                update({'email' : (iemail) })
-            session.commit()
-        if iidpt != None:
-            session.query(dbuser).filter(dbuser.username == iusername).\
-                update({'idpt' : (iidpt) })
-            session.commit()
-        if iidrole != None:
-            session.query(dbuser).filter(dbuser.username == iusername).\
-                update({'idrole' : (iidrole) }) 
-            session.commit()
+        if self.buscar(iusername)!="":
+            if ifullname != None:
+                session.query(dbuser).filter(dbuser.username == iusername).\
+                    update({'fullname' : (ifullname) })
+                session.commit()
+            if ipassword != None:
+                session.query(dbuser).filter(dbuser.username == iusername).\
+                    update({'password' : (ipassword) })
+                session.commit()
+            if iemail != None:
+                session.query(dbuser).filter(dbuser.username == iusername).\
+                    update({'email' : (iemail) })
+                session.commit()
+            if iidpt != None:
+                session.query(dbuser).filter(dbuser.username == iusername).\
+                    update({'idpt' : (iidpt) })
+                session.commit()
+            if iidrole != None:
+                session.query(dbuser).filter(dbuser.username == iusername).\
+                    update({'idrole' : (iidrole) }) 
+                session.commit()
             
 def main():
     usr = clsDBUser()
-    usr.insertar("juanjito", "juanjuan", "juan123", "juan@juan.com", 2, 3) 
-    usr.insertar("juanjito2", "juanjuan2", "juan123", "juan2@juan.com", 3, 3) 
-    usr.insertar("juanjito3", "juanjuan3", "juan123", "juan2@juan.com", 3, 3) 
+    usr.insertar("juanjito", "juanjuan", "juAn123.4.5.6.7", "juan@juan.com", 2, 3) 
+    usr.insertar("juanjito2", "juanjuan2", "!uAn123456789101", "juan2@juan.com", 3, 3) 
+    usr.insertar("juanjito3", "juanjuan3", "juAn123.4.5.6.7.", "juan2@juan.com", 3, 3) 
     
     usr.eliminar("juanjuan")
     

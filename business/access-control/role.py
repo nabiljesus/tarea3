@@ -3,7 +3,8 @@ Created on May 6, 2015
 
 @author: Meggie y Cristina
 '''
-
+import os, sys
+sys.path.append('../../data')
 from model import *
 
 DBSession = sessionmaker(bind = engine)
@@ -19,10 +20,13 @@ class clsRole():
     ''' 
         
     def insertar(self, idrole, namerole):
-        
-        newrole = role(idrole, namerole) 
-        session.add(newrole)
-        session.commit()
+        if self.buscar(idrole)=="":
+            newrole = role(idrole, namerole) 
+            session.add(newrole)
+            session.commit()
+            return True
+        else:
+            return False
         
     ''' Metodo buscar
         Busca a traves del nombre un rol dentro de la base de datos y lo imprime

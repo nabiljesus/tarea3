@@ -3,7 +3,6 @@ Created on May 6, 2015
 
 @author: Meggie y Cristina
 '''
-
 from model import *
 
 DBSession = sessionmaker(bind = engine)
@@ -19,10 +18,13 @@ class clsDpt():
     '''  
           
     def insertar(self, iddpt, namedpt):
-        
-        newdpt = dpt(iddpt, namedpt) 
-        session.add(newdpt)
-        session.commit()
+        if self.buscar(iddpt)=="":
+            newdpt = dpt(iddpt, namedpt) 
+            session.add(newdpt)
+            session.commit()
+            return True
+        else:
+            return False
         
     ''' Metodo buscar
         Busca a traves del nombre un departamento dentro de la base de datos
@@ -40,10 +42,12 @@ class clsDpt():
         Elimina dentro de la base de datos a un departamento
     '''   
      
-    def eliminar(self, idpt):
+    def eliminar(self, iidpt):
         
-        query = self.buscar(idpt)
-        session.query(dpt).filter(dpt.iddpt == idpt).delete(synchronize_session=False)
+        session.query(dbuser).filter(dbuser.iddpt == iidpt).delete()
+        session.commit()
+        
+        session.query(dpt).filter(dpt.iddpt == iidpt).delete(synchronize_session=False)
         session.commit()
     
     ''' Metodo listar
@@ -62,11 +66,11 @@ class clsDpt():
           
     def modificar(self, iidpt, inamedpt):
         
-        query = self.buscar(iidpt)
+        if self.buscar(iidpt)!="":
                 
-        session.query(dpt).filter(dpt.iddpt == iidpt).\
-             update({'namedpt' : (inamedpt) })
-        session.commit()
+            session.query(dpt).filter(dpt.iddpt == iidpt).\
+                 update({'namedpt' : (inamedpt) })
+            session.commit()
 
 
 def main():
@@ -78,10 +82,10 @@ def main():
     dpts.eliminar(1)
     
     dpts.modificar(2, 'dpt222')
-    #print()
+    print()
     print(dpts.buscar(2))
-    #print()
-    #dpts.listar()
+    print()
+    dpts.listar()
 
 if __name__ == "__main__":
    # stuff only to run when not called via 'import' here

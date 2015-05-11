@@ -4,9 +4,8 @@ Created on May 6, 2015
 @author: Meggie y Cristina
 '''
 
-import model
-import user
-import encrypt
+import user, encrypt
+from werkzeug import check_password_hash
 
 class clsLogin():
     
@@ -16,10 +15,25 @@ class clsLogin():
 
     def longitud(self, user_password):
         longi=encrypt.clsAccessControl()
-        return encri.length_password(user_password)
+        return longi.length_password(user_password)
     
     def check_password(self, username, trypass):
-        longi=encrypt.clsAccessControl()
+        decri=encrypt.clsAccessControl()
         usr=user.clsDBUser()
-        passw=usr.buscar(username)[1] #Obteniendo el hash de la db
-        return encri.check_password(passw,trypass)
+        passw=usr.buscar(username).split() #Obteniendo el hash de la db
+        if passw!=[]:
+            print(passw)
+            passw=passw[1]
+            return decri.check_password(passw,trypass)
+        else:
+            return False
+def main():
+    logi=clsLogin()
+    print(logi.encriptar("hola"))
+    print(logi.encriptar("holaVAL3kas!?"))
+    print(logi.longitud("hola"))
+    print(logi.check_password("juanjuan2","baked"))
+    print(logi.check_password("juanjuan2","!uAn123456789101"))
+if __name__ == "__main__":
+   # stuff only to run when not called via 'import' here
+   main()
